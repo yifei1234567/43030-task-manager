@@ -1,10 +1,18 @@
 class Task:
     def __init__(self, title, status="ToDo"):
         self.title = title
+        self.completed = False
         self.status = status
 
     def mark_completed(self):
+        self.completed = True
         self.status = "Done"
+
+    def __repr__(self):
+        return f"{self.title} - {'Done' if self.completed else 'ToDo'}"
+
+    def __str__(self):
+        return f"Task: {self.title}, Status: {self.status}"
 
 
 class TaskPool:
@@ -12,14 +20,18 @@ class TaskPool:
         self.tasks = []
 
     def populate(self):
-        self.tasks = [
-            Task("Add Login UI", "Done"),
-            Task("Fix UI Bug", "Done"),
-            Task("Write Tests", "Done"),
-            Task("Update Login UI"),
-            Task("Update Documentation"),
-            Task("Deploy to Production"),
-        ]
+        task1 = Task("Add Login UI", status="Done")
+        task2 = Task("Fix UI Bug", status="Done")
+        task3 = Task("Write Tests", status="Done")
+        task4 = Task("Update Login UI", status="ToDo")
+        task5 = Task("Update Documentation", status="ToDo")
+        task6 = Task("Deploy to Production", status="ToDo")
+
+        task1.mark_completed()
+        task2.mark_completed()
+        task3.mark_completed()
+
+        self.tasks = [task1, task2, task3, task4, task5, task6]
 
     def add_task(self, task):
         self.tasks.append(task)
@@ -31,15 +43,20 @@ class TaskPool:
         return [task for task in self.tasks if task.status == "Done"]
 
 
-if __name__ == "__main__":
+def main():
     pool = TaskPool()
     pool.populate()
 
+    task_titles = [task.title for task in pool.get_open_tasks()]
     print("ToDo Tasks:")
-    for task in pool.get_open_tasks():
-        print(task.title)
+    for title in task_titles:
+        print(title)
 
-    print("")
-    print("Done Tasks:")
-    for task in pool.get_done_tasks():
-        print(task.title)
+    completed_titles = [task.title for task in pool.get_done_tasks()]
+    print("\nDone Tasks:")
+    for title in completed_titles:
+        print(title)
+
+
+if __name__ == "__main__":
+    main()
